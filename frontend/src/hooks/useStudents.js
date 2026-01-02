@@ -3,46 +3,41 @@ import { studentService } from '../services/studentService';
 
 export const useStudents = () => {
   const [students, setStudents] = useState([]);
-  const [metadata, setMetadata] = useState({ page: 1, total_pages: 1 });
+  const [metadata, setMetadata] = useState({ page: 1, total_pages: 1, total_records: 0 });
   const [loading, setLoading] = useState(false);
-  const [filters, setFilters] = useState({ keyword: '', home_town: '', min_math: '' });
+  const [queryParams, setQueryParams] = useState({ page: 1, size: 5, keyword: '', home_town: '', min_math: '' });
 
-  const fetchStudents = useCallback(async (page = 1) => {
+  const fetchStudents = useCallback(async () => {
     setLoading(true);
     try {
-      const result = await studentService.getAll({ page, size: 10, ...filters });
-      setStudents(result.items);
+      const result = await studentService.getAll(queryParams);
+      
+      const enhancedItems = result.items.map(s => {
+          const avg = (s.math_score + s.literature_score + s.english_score) / 3;
+          return {
+            ...s,
+            id: s.student_id, // Required for MUI DataGrid
+            average_score: parseFloat(avg.toFixed(1))
+          };
+      });
+
+      setStudents(enhancedItems);
       setMetadata(result.metadata);
     } catch (error) {
-      console.error("Error fetching data:", error);
+      console.error("Fetch Error:", error);
     } finally {
       setLoading(false);
     }
-  }, [filters]);
+  }, [queryParams]);
 
-  useEffect(() => {
-    fetchStudents(1);
-  }, [fetchStudents]);
+  useEffect(() => { fetchStudents(); }, [fetchStudents]);
 
-  const addStudent = async (data) => {
-    await studentService.create(data);
-    fetchStudents(metadata.page);
-  };
-
-  const updateStudent = async (id, data) => {
-    await studentService.update(id, data);
-    fetchStudents(metadata.page);
-  };
-
-  const removeStudent = async (id) => {
-    if (window.confirm(`Delete student ${id}?`)) {
-      await studentService.delete(id);
-      fetchStudents(metadata.page);
-    }
-  };
+  const handleChangeParams = (newParams) => setQueryParams(p => ({ ...p, ...newParams }));
 
   return { 
-    students, metadata, loading, filters, setFilters, 
-    fetchStudents, addStudent, updateStudent, removeStudent 
+    students, metadata, loading, queryParams, handleChangeParams,
+    addStudent: async (d) => { await studentService.create(d); fetchStudents(); },
+    updateStudent: async (id, d) => { await studentService.update(id, d); fetchStudents(); },
+    removeStudent: async (id) => { if (window.confirm("Delete?")) { await studentService.delete(id); fetchStudents(); } }
   };
 };
