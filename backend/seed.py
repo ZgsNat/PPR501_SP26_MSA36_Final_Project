@@ -2,6 +2,7 @@ from app.core.database import SessionLocal, Base, engine
 from app.models.student_entity import StudentEntity
 from faker import Faker
 import random
+import unicodedata
 
 # Ensure tables exist
 Base.metadata.create_all(bind=engine)
@@ -21,13 +22,15 @@ def seed_data():
     
     students = []
     for i in range(100):
+        full_name = unicodedata.normalize('NFC', fake.name())
+        home_town = unicodedata.normalize('NFC', random.choice(provinces))
         student = StudentEntity(
             student_id=f"SV{1000 + i}",
-            full_name=fake.name(),
+            full_name=full_name,
             email=fake.email(),
             phone=fake.phone_number(),
             birth_date=fake.date_of_birth(minimum_age=18, maximum_age=23).strftime("%d/%m/%Y"),
-            home_town=random.choice(provinces),
+            home_town=home_town,
             math_score=round(random.uniform(4.0, 10.0), 1),
             literature_score=round(random.uniform(4.0, 10.0), 1),
             english_score=round(random.uniform(4.0, 10.0), 1)
