@@ -8,7 +8,7 @@ This project is part of the **PPR501** course. It is a comprehensive student man
 - **Backend:** FastAPI
 - **Data Crawling:** Selenium (Web automation)
 - **API Response:** XML format
-- **Data Storage:** Excel (.xlsx)
+- **Data Storage:** Sqlite (students.db)
 - **Data Processing:** Pandas (Cleaning & Analysis)
 
 ---
