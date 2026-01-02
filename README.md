@@ -40,19 +40,19 @@ This project is part of the **PPR501** course. It is a comprehensive student man
 ├── backend/                        # FastAPI backend and data logic
 │   ├── README.md                   # Backend-specific notes and run instructions
 │   ├── requirements.txt            # Python dependencies for backend
-│   ├── seed.py                     # Script to populate initial Excel student data
+│   ├── seed.py                     # Script to populate initial SQLite (`students.db`) with sample data
 │   └── app/
 │       ├── main.py                 # FastAPI application entrypoint (routes mount)
 │       ├── api/
 │       │   └── student_api.py      # API endpoints for student CRUD (returns XML)
 │       ├── core/
-│       │   └── database.py         # Excel storage access and DB-like helpers
+│       │   └── database.py         # SQLite engine and session (students.db)
 │       ├── models/
 │       │   ├── common.py           # Shared constants/types
 │       │   ├── student_entity.py   # Internal student entity representation
 │       │   └── student_model.py    # Pydantic models / request & response schemas
 │       ├── repositories/
-│       │   └── student_repository.py # Data access layer (CRUD using Excel)
+│       │   └── student_repository.py # Data access layer (CRUD using SQLite)
 │       ├── services/
 │       │   └── student_service.py  # Business logic and validation
 │       └── utils/
