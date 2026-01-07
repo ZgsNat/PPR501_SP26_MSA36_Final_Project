@@ -1,0 +1,97 @@
+from fastapi import APIRouter, Depends, Query, status
+from src.infrastructure.xml.xml_renderer import XMLResponse
+
+# Infrastructure & UoW
+from src.infrastructure.db.database import SessionLocal
+from src.infrastructure.db.sqlalchemy_uow import SqlAlchemyUnitOfWork
+
+# Schemas
+from src.adapters.schemas.student_schema import StudentCreateSchema, StudentUpdateSchema
+
+# Use Cases
+from src.usecases.student.list_students import ListStudentsUseCase
+from src.usecases.student.get_student import GetStudentUseCase
+from src.usecases.student.create_student import CreateStudentUseCase
+from src.usecases.student.update_student import UpdateStudentUseCase
+from src.usecases.student.delete_student import DeleteStudentUseCase
+
+router = APIRouter()
+
+# --- Dependency Injection Helper ---
+# Thay vì lấy db session, ta lấy hẳn một Unit of Work
+def get_uow():
+    return SqlAlchemyUnitOfWork(SessionLocal)
+
+# --- Routes ---
+
+@router.get("/students", response_class=XMLResponse)
+def list_students(
+    page: int = Query(1, ge=1),
+    size: int = Query(10, ge=1, le=100),
+    keyword: str = None,
+    home_town: str = None,
+    min_math: float = None,
+    uow: SqlAlchemyUnitOfWork = Depends(get_uow)
+):
+    """
+    Lấy danh sách sinh viên có phân trang và lọc.
+    """
+    uc = ListStudentsUseCase(uow)
+    # Use Case tự quản lý việc mở/đóng connection qua uow
+    return uc.execute(page, size, keyword, home_town, min_math)
+
+
+@router.get("/student/{student_id}", response_class=XMLResponse)
+def get_student(
+    student_id: str, 
+    uow: SqlAlchemyUnitOfWork = Depends(get_uow)
+):
+    """
+    Lấy chi tiết sinh viên.
+    Nếu không tìm thấy, UseCase sẽ raise StudentNotFoundError -> Middleware trả 404.
+    """
+    uc = GetStudentUseCase(uow)
+    return uc.execute(student_id)
+
+
+@router.post("/student", status_code=status.HTTP_201_CREATED, response_class=XMLResponse)
+def create_student(
+    student_in: StudentCreateSchema, 
+    uow: SqlAlchemyUnitOfWork = Depends(get_uow)
+):
+    """
+    Tạo sinh viên mới.
+    Nếu trùng ID -> UseCase raise StudentAlreadyExistsError -> Middleware trả 409.
+    """
+    uc = CreateStudentUseCase(uow)
+    # model_dump() chuyển Pydantic object thành dict
+    result = uc.execute(student_in.model_dump())
+    return {"message": "Student created", "student_id": result.student_id}
+
+
+@router.put("/student/{student_id}", response_class=XMLResponse)
+def update_student(
+    student_id: str, 
+    student_in: StudentUpdateSchema, 
+    uow: SqlAlchemyUnitOfWork = Depends(get_uow)
+):
+    """
+    Cập nhật thông tin sinh viên.
+    exclude_unset=True để chỉ update những trường người dùng gửi lên.
+    """
+    uc = UpdateStudentUseCase(uow)
+    result = uc.execute(student_id, student_in.model_dump(exclude_unset=True))
+    return {"message": "Student updated", "student_id": result.student_id}
+
+
+@router.delete("/student/{student_id}", response_class=XMLResponse)
+def delete_student(
+    student_id: str, 
+    uow: SqlAlchemyUnitOfWork = Depends(get_uow)
+):
+    """
+    Xóa sinh viên (Soft Delete).
+    """
+    uc = DeleteStudentUseCase(uow)
+    uc.execute(student_id)
+    return {"message": "Student deleted", "student_id": student_id}
