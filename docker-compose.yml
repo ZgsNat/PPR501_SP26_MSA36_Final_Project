@@ -4,10 +4,8 @@ services:
     ports:
       - "8000:8000"
     volumes:
-      - ./backend:/app
-    # depends_on:      <-- Tạm thời comment dòng này
-    #   - selenium
-    command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
+      - ./backend:/src
+    command: uvicorn src.main:app --host 0.0.0.0 --port 8000 --reload
 
   frontend:
     build: ./frontend
@@ -20,8 +18,3 @@ services:
       - CHOKIDAR_USEPOLLING=true
     depends_on:
       - backend
-
-#  selenium:           <-- Tạm thời comment toàn bộ service này
-#    image: selenium/standalone-chrome:latest
-#    ports:
-#      - "4444:4444"

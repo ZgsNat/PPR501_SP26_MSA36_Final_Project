@@ -1,13 +1,14 @@
 #!/bin/sh
 set -e
 
-# If the SQLite DB doesn't exist, run the seed script
+# File DB sqlite sẽ được tạo ở /app/students.db
 if [ ! -f /app/students.db ]; then
-  echo "students.db not found — running seed.py to initialize database"
-  python seed.py
+  echo "students.db not found — running dirty_seed.py..."
+  # Chạy dirty_seed.py
+  python dirty_seed.py
 else
   echo "students.db found — skipping seeding"
 fi
 
-# Exec the passed command (uvicorn by default)
+# Chạy lệnh CMD (uvicorn)
 exec "$@"
