@@ -1,11 +1,13 @@
 from src.domain.unit_of_work import IUnitOfWork  # Import Interface
 from src.domain.entities.student import Student
+from src.domain.service.student_validator import StudentValidator
 from src.domain.exceptions.student import StudentAlreadyExistsError, InvalidStudentDataError
 from datetime import datetime
 
 class CreateStudentUseCase:
-    def __init__(self, uow: IUnitOfWork): # Thay repo bằng uow
+    def __init__(self, uow: IUnitOfWork, validator: StudentValidator): # Thay repo bằng uow
         self.uow = uow
+        self.validator = validator
 
     def execute(self, data: dict) -> Student:
         # Sử dụng context manager (with) để đảm bảo transaction 
@@ -15,9 +17,10 @@ class CreateStudentUseCase:
                 raise StudentAlreadyExistsError(data['student_id'])
             
             new_student = Student(**data)
-            new_student.validate_birth_date()
-            new_student.validate_scores()
+            self.validator.validate(new_student)
+            # new_student = Student(**data)
+            # new_student.validate_birth_date()
+            # new_student.validate_scores()
             created_student = uow.students.create(new_student)
             
-            # Không cần gọi uow.commit() thủ công vì __exit__ sẽ làm việc đó
             return created_student

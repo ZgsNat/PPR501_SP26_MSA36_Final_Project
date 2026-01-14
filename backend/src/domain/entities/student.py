@@ -32,10 +32,16 @@ class Student:
         # Validate invariant sau khi update
         self.validate()
 
-    def validate(self):
+    def validate(self, validator = None):
+        if validator:
+            validator.validate()
+        else:
+            self._default_validate()
+                
+    def _default_validate(self):
         self.validate_birth_date()
         self.validate_scores()
-        
+
     def validate_birth_date(self):
         if self.birth_date:
             try:

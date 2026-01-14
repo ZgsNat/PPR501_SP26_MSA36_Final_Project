@@ -15,6 +15,13 @@ from src.usecases.student.create_student import CreateStudentUseCase
 from src.usecases.student.update_student import UpdateStudentUseCase
 from src.usecases.student.delete_student import DeleteStudentUseCase
 
+# Domain validator
+from src.domain.service.student_validator import (
+    DefaultStudentValidator,
+    InternalStudentValidator
+)
+
+
 router = APIRouter()
 
 # --- Dependency Injection Helper ---
@@ -55,16 +62,34 @@ def get_student(
 
 
 @router.post("/student", status_code=status.HTTP_201_CREATED, response_class=XMLResponse)
+# def create_student(
+#     student_in: StudentCreateSchema, 
+#     uow: SqlAlchemyUnitOfWork = Depends(get_uow)
+# ):
+#     """
+#     Tạo sinh viên mới.
+#     Nếu trùng ID -> UseCase raise StudentAlreadyExistsError -> Middleware trả 409.
+#     """
+#     uc = CreateStudentUseCase(uow)
+#     # model_dump() chuyển Pydantic object thành dict
+#     result = uc.execute(student_in.model_dump())
+#     return {"message": "Student created", "student_id": result.student_id}
+
 def create_student(
     student_in: StudentCreateSchema, 
     uow: SqlAlchemyUnitOfWork = Depends(get_uow)
 ):
-    """
-    Tạo sinh viên mới.
-    Nếu trùng ID -> UseCase raise StudentAlreadyExistsError -> Middleware trả 409.
-    """
-    uc = CreateStudentUseCase(uow)
-    # model_dump() chuyển Pydantic object thành dict
+    # this is only for demo purpose
+    # in real world, you can choose either DefaultStudentValidator or InternalStudentValidator
+    # based on your business logic or configuration
+    # we need to use design pattern like Factory Pattern to make it more elegant
+    # Composite Pattern can also be used if multiple validators are needed
+    # or you can divide into different endpoints for different validation strategies
+    # Fastapi Dependency Injection can also be used to inject different validators
+    # based on request context or user roles
+    validator = DefaultStudentValidator()
+
+    uc = CreateStudentUseCase(uow, validator)
     result = uc.execute(student_in.model_dump())
     return {"message": "Student created", "student_id": result.student_id}
 
