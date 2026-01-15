@@ -2,11 +2,11 @@
 
 Selenium script to crawl student data from the Student Management System web application.
 
-## 📋 Overview
+## Overview
 
 This crawler automatically extracts student records from the frontend application running on `http://localhost:3000`. It supports pagination to crawl all available data and exports results in multiple formats.
 
-## 🎯 What Data is Crawled
+## What Data is Crawled
 
 The crawler extracts the following information:
 
@@ -29,7 +29,7 @@ The crawler extracts the following information:
 - **Crawl timestamp** - When the data was collected
 - **Screenshots** - Visual proof of crawl execution
 
-## 📦 Output Files
+## Output Files
 
 After running the crawler, the following files are generated in the `crawl_data/` directory:
 
@@ -61,7 +61,7 @@ Flat file with student records only.
 
 **Use case**: Visual verification, debugging, documentation
 
-## 🚀 How to Run
+## How to Run
 
 ### Prerequisites
 
@@ -153,7 +153,7 @@ python selenium_crawler.py
 ✓ Crawling completed successfully!
 ```
 
-## ⚙️ Advanced Usage
+## Advanced Usage
 
 ### Custom Configuration
 
@@ -195,17 +195,17 @@ The crawler includes several optimizations:
 
 **Typical execution time**: 15-25 seconds for 400 records
 
-## 📊 Data Quality
+## Data Quality
 
 The crawler handles:
 
-- ✅ Missing values (null, empty fields)
-- ✅ Special characters in text
-- ✅ Invalid scores (< 0 or > 10)
-- ✅ Dynamic content loading
-- ✅ Pagination edge cases
+- Missing values (null, empty fields)
+- Special characters in text
+- Invalid scores (< 0 or > 10)
+- Dynamic content loading
+- Pagination edge cases
 
-## 🐛 Troubleshooting
+## Troubleshooting
 
 ### Common Issues
 
@@ -225,7 +225,7 @@ The crawler handles:
 - Increase wait times in the script
 - Check internet connection and system performance
 
-## 📁 Directory Structure
+## Directory Structure
 
 ```
 backend/crawl/
@@ -239,21 +239,21 @@ backend/crawl/
     └── crawl_complete.png     # Final screenshot
 ```
 
-## 🔐 Security Notes
+## Security Notes
 
 - The crawler only reads data, it does not modify anything
 - All data is saved locally in the `crawl_data/` directory
 - No data is sent to external servers
 - Screenshots may contain sensitive information
 
-## 📝 Notes
+## Notes
 
 1. **Ensure frontend is running** before executing the crawler
 2. **Close other Chrome instances** to avoid conflicts
 3. **Check output files** in `crawl_data/` after completion
 4. **Execution time** depends on data volume and system performance
 
-## 🆘 Support
+## Support
 
 For issues or questions:
 1. Check the troubleshooting section above
