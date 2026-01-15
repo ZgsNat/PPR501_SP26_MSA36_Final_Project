@@ -62,3 +62,5 @@ class StudentFilter:
     keyword: Optional[str] = None
     home_town: Optional[str] = None
     min_math: Optional[float] = None
+    min_literature: Optional[float] = None
+    min_english: Optional[float] = None

@@ -7,6 +7,7 @@ from src.infrastructure.db.sqlalchemy_uow import SqlAlchemyUnitOfWork
 
 # Schemas
 from src.adapters.schemas.student_schema import StudentCreateSchema, StudentUpdateSchema
+from src.adapters.schemas.student_query import StudentQueryDTO
 
 # Use Cases
 from src.usecases.student.list_students import ListStudentsUseCase
@@ -33,19 +34,11 @@ def get_uow():
 
 @router.get("/students", response_class=XMLResponse)
 def list_students(
-    page: int = Query(1, ge=1),
-    size: int = Query(10, ge=1, le=100),
-    keyword: str = None,
-    home_town: str = None,
-    min_math: float = None,
+    query: StudentQueryDTO = Depends(),
     uow: SqlAlchemyUnitOfWork = Depends(get_uow)
 ):
-    """
-    Lấy danh sách sinh viên có phân trang và lọc.
-    """
     uc = ListStudentsUseCase(uow)
-    # Use Case tự quản lý việc mở/đóng connection qua uow
-    return uc.execute(page, size, keyword, home_town, min_math)
+    return uc.execute(query)
 
 
 @router.get("/student/{student_id}", response_class=XMLResponse)
@@ -62,18 +55,18 @@ def get_student(
 
 
 @router.post("/student", status_code=status.HTTP_201_CREATED, response_class=XMLResponse)
-# def create_student(
-#     student_in: StudentCreateSchema, 
-#     uow: SqlAlchemyUnitOfWork = Depends(get_uow)
-# ):
-#     """
-#     Tạo sinh viên mới.
-#     Nếu trùng ID -> UseCase raise StudentAlreadyExistsError -> Middleware trả 409.
-#     """
-#     uc = CreateStudentUseCase(uow)
-#     # model_dump() chuyển Pydantic object thành dict
-#     result = uc.execute(student_in.model_dump())
-#     return {"message": "Student created", "student_id": result.student_id}
+def create_student(
+    student_in: StudentCreateSchema, 
+    uow: SqlAlchemyUnitOfWork = Depends(get_uow)
+):
+    """
+    Tạo sinh viên mới.
+    Nếu trùng ID -> UseCase raise StudentAlreadyExistsError -> Middleware trả 409.
+    """
+    uc = CreateStudentUseCase(uow)
+    # model_dump() chuyển Pydantic object thành dict
+    result = uc.execute(student_in.model_dump())
+    return {"message": "Student created", "student_id": result.student_id}
 
 def create_student(
     student_in: StudentCreateSchema, 
