@@ -37,26 +37,54 @@ This project is part of the **PPR501** course. It is a comprehensive student man
 ## 📂 Project Structure
 ```text
 ├── README.md                       # Project overview and setup notes
-├── backend/                        # FastAPI backend and data logic
-│   ├── README.md                   # Backend-specific notes and run instructions
-│   ├── requirements.txt            # Python dependencies for backend
-│   ├── seed.py                     # Script to populate initial SQLite (`students.db`) with sample data
-│   └── app/
-│       ├── main.py                 # FastAPI application entrypoint (routes mount)
-│       ├── api/
-│       │   └── student_api.py      # API endpoints for student CRUD (returns XML)
-│       ├── core/
-│       │   └── database.py         # SQLite engine and session (students.db)
-│       ├── models/
-│       │   ├── common.py           # Shared constants/types
-│       │   ├── student_entity.py   # Internal student entity representation
-│       │   └── student_model.py    # Pydantic models / request & response schemas
-│       ├── repositories/
-│       │   └── student_repository.py # Data access layer (CRUD using SQLite)
-│       ├── services/
-│       │   └── student_service.py  # Business logic and validation
-│       └── utils/
-│           └── xml_renderer.py     # Helper to render API responses as XML
+├──backend/
+│  ├── src/
+│  │   ├── main.py                          # FastAPI application entry point
+│  │   │
+│  │   ├── domain/                          # 🏢 DOMAIN LAYER (Business Logic)
+│  │   │   ├── entities/
+│  │   │   │   └── student.py              # Student business entity
+│  │   │   ├── repositories/
+│  │   │   │   └── student_repository.py   # Repository interface (abstract)
+│  │   │   ├── exceptions/                 # Domain-specific exceptions package
+│  │   │   │   ├── __init__.py
+│  │   │   │   ├── base.py                 # Base domain exception types
+│  │   │   │   └── student.py              # Student-specific exceptions
+│  │   │   └── unit_of_work.py             # Unit of Work interface
+│  │   │
+│  │   ├── usecases/                        # 📱 USE CASES LAYER (Application Logic)
+│  │   │   └── student/
+│  │   │       ├── create_student.py       # Create new student use case
+│  │   │       ├── get_student.py          # Get single student use case
+│  │   │       ├── list_students.py        # List all students with filtering
+│  │   │       ├── update_student.py       # Update student data use case
+│  │   │       └── delete_student.py       # Delete student use case
+│  │   │
+│  │   ├── adapters/                        # 🖥️  ADAPTERS LAYER (Interface)
+│  │   │   ├── api/
+│  │   │   │   ├── exception_handlers.py   # Central FastAPI exception handlers
+│  │   │   │   └── student_controller.py   # FastAPI route handlers
+│  │   │   ├── repositories/
+│  │   │   │   └── sqlalchemy_student_repository.py  # ORM implementation
+│  │   │   └── schemas/
+│  │   │       └── student_schema.py       # Pydantic request/response schemas
+│  │   │
+│  │   ├── infrastructure/                  # 🔧 INFRASTRUCTURE LAYER
+│  │   │   ├── db/
+│  │   │   │   ├── database.py             # SQLAlchemy setup, session management
+│  │   │   │   ├── mixins.py               # Base model mixins (timestamps)
+│  │   │   │   └── sqlalchemy_uow.py       # Unit of Work implementation
+│  │   │   ├── xml/
+│  │   │   │   └── xml_renderer.py         # XML response formatter
+│  │   │
+│  │   └── shared/
+│  │       └── pagination.py               # Pagination utilities
+│  │
+│  ├── Dockerfile                           # Docker container configuration
+│  ├── entrypoint.sh                        # Container startup script
+│  ├── requirements.txt                     # Python dependencies
+│  ├── seed.py                             # Database seeding script (100 test records)
+│  └── README.md                           # This file
 ├── frontend/                       # React frontend application
 │   ├── package.json                # Frontend dependencies & scripts
 │   ├── README.md                   # Frontend notes and run instructions
@@ -70,11 +98,7 @@ This project is part of the **PPR501** course. It is a comprehensive student man
 │       │   └── axiosClient.js      # Axios instance for API requests
 │       ├── components/
 │       │   ├── common/
-│       │   │   ├── Modal.js        # Reusable modal component
-│       │   │   └── Pagination.js   # Pagination UI component
 │       │   └── students/
-│       │       ├── StudentFilter.js# Filter controls for student list
-│       │       ├── StudentForm.js  # Student create/edit form (vanilla)
 │       │       ├── StudentFormMUI.js # Material UI variant of the form
 │       │       └── StudentTable.js # Table listing students
 │       ├── hooks/
