@@ -5,7 +5,7 @@ export const useStudents = () => {
   const [students, setStudents] = useState([]);
   const [metadata, setMetadata] = useState({ page: 1, total_pages: 1, total_records: 0 });
   const [loading, setLoading] = useState(false);
-  const [queryParams, setQueryParams] = useState({ page: 1, size: 5, keyword: '', home_town: '', min_math: '' });
+  const [queryParams, setQueryParams] = useState({ page: 1, size: 5, keyword: '', home_town: '', min_math: '' , min_literature: '', min_english: ''});
 
   // --- 1. THÊM STATE ĐỂ QUẢN LÝ THÔNG BÁO (SUCCESS/ERROR) ---
   const [notification, setNotification] = useState({ open: false, message: '', severity: 'info' }); // severity: success | error | warning

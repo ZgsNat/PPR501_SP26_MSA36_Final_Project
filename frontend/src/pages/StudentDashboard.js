@@ -120,6 +120,16 @@ const StudentDashboard = () => {
               onChange={(e) => handleChangeParams({ min_math: e.target.value, page: 1 })}
             />
           </Grid>
+          <Grid item xs={6} md={4}>
+            <TextField fullWidth size="small" type="number" label="Min Lit Score" value={queryParams.min_literature}
+              onChange={(e) => handleChangeParams({ min_literature: e.target.value, page: 1 })}
+            />
+          </Grid>
+          <Grid item xs={6} md={4}>
+            <TextField fullWidth size="small" type="number" label="Min Eng Score" value={queryParams.min_english}
+              onChange={(e) => handleChangeParams({ min_english: e.target.value, page: 1 })}
+            />
+          </Grid>
         </Grid>
       </Paper>
 

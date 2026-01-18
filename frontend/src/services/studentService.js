@@ -44,18 +44,18 @@ export const studentService = {
     return await axiosClient.delete(`/student/${id}`);
   },
 
-  exportToExcel: async () => {
-    const response = await axiosClient.get('/export/excel', {
-      responseType: 'blob',
-      headers: { 'Accept': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' }
-    });
+  // exportToExcel: async () => {
+  //   const response = await axiosClient.get('/export/excel', {
+  //     responseType: 'blob',
+  //     headers: { 'Accept': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' }
+  //   });
     
-    const url = window.URL.createObjectURL(new Blob([response.data]));
-    const link = document.createElement('a');
-    link.href = url;
-    link.setAttribute('download', 'students_list.xlsx');
-    document.body.appendChild(link);
-    link.click();
-    link.parentNode.removeChild(link);
-  }
+  //   const url = window.URL.createObjectURL(new Blob([response.data]));
+  //   const link = document.createElement('a');
+  //   link.href = url;
+  //   link.setAttribute('download', 'students_list.xlsx');
+  //   document.body.appendChild(link);
+  //   link.click();
+  //   link.parentNode.removeChild(link);
+  // }
 };
