@@ -75,6 +75,9 @@ backend/
 │   │   ├── entities/
 │   │   │   └── student.py              # Student business entity
 │   │   ├── repositories/
+│   │   │   ├── student/
+│   │   │   │   ├── student_write.py
+│   │   │   │   └── student_read.py
 │   │   │   └── student_repository.py   # Repository interface (abstract)
 │   │   ├── exceptions/                 # Domain-specific exceptions package
 │   │   │   ├── __init__.py
