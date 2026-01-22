@@ -5,7 +5,7 @@ from src.domain.exceptions.student import StudentAlreadyExistsError, InvalidStud
 from datetime import datetime
 
 class CreateStudentUseCase:
-    def __init__(self, uow: IUnitOfWork, validator: StudentValidator): # Thay repo bằng uow
+    def __init__(self, uow: IUnitOfWork, validator: StudentValidator):
         self.uow = uow
         self.validator = validator
 
