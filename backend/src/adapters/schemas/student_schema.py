@@ -14,12 +14,6 @@ class StudentCreateSchema(BaseModel):
     literature_score: float = 0.0
     english_score: float = 0.0
 
-    # @field_validator('birth_date')
-    # def validate_date(cls, v):
-    #     if v:
-    #         datetime.strptime(v, '%d/%m/%Y')
-    #     return v
-
 class StudentUpdateSchema(BaseModel):
     full_name: Optional[str] = None
     email: Optional[str] = None

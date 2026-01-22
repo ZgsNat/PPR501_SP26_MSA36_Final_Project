@@ -7,37 +7,6 @@ from src.infrastructure.db.models.student_orm import StudentORM
 from src.shared.pagination import PaginationParams, PagedResult
 from typing import Optional, Dict, Any
 
-
-# class SqlAlchemyStudentRepository(IStudentRepository):
-#     def __init__(self, db: Session):
-#         self.db = db
-
-#     def get_list(self, filters: StudentFilter, pagination: PaginationParams) -> PagedResult[Student]:
-#         query = self.db.query(StudentORM)
-        
-#         query = query.filter(StudentORM.deleted_at == None)
-#         # --- Apply Generic Filters Logic Here ---
-#         if filters.keyword:
-#             search = f"%{filters.keyword}%"
-#             query = query.filter(or_(
-#                 StudentORM.full_name.ilike(search),
-#                 StudentORM.email.ilike(search)
-#             ))
-            
-#         if filters.home_town:
-#             query = query.filter(StudentORM.home_town.ilike(f"%{filters.home_town}%"))
-            
-#         if filters.min_math is not None:
-#             query = query.filter(StudentORM.math_score >= filters.min_math)
-
-#         # --- Pagination Logic ---
-#         total_records = query.count()
-#         items_orm = query.offset(pagination.offset).limit(pagination.size).all()
-        
-#         # Convert List[ORM] -> List[Entity]
-#         items_domain = [item.to_domain() for item in items_orm]
-        
-#         return PagedResult.create(items_domain, total_records, pagination)
 class SqlAlchemyStudentRepository(IStudentRepository):
     def __init__(self, db: Session):
         self.db = db

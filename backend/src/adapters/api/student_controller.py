@@ -22,7 +22,6 @@ from src.domain.service.student_validator import (
     InternalStudentValidator
 )
 
-
 router = APIRouter()
 
 # --- Dependency Injection Helper ---
@@ -55,19 +54,6 @@ def get_student(
 
 
 @router.post("/student", status_code=status.HTTP_201_CREATED, response_class=XMLResponse)
-# def create_student(
-#     student_in: StudentCreateSchema, 
-#     uow: SqlAlchemyUnitOfWork = Depends(get_uow)
-# ):
-#     """
-#     Tạo sinh viên mới.
-#     Nếu trùng ID -> UseCase raise StudentAlreadyExistsError -> Middleware trả 409.
-#     """
-#     uc = CreateStudentUseCase(uow)
-#     # model_dump() chuyển Pydantic object thành dict
-#     result = uc.execute(student_in.model_dump())
-#     return {"message": "Student created", "student_id": result.student_id}
-
 def create_student(
     student_in: StudentCreateSchema, 
     uow: SqlAlchemyUnitOfWork = Depends(get_uow)
