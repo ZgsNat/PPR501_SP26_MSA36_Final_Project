@@ -67,7 +67,7 @@ export const useStudents = () => {
       setStudents(enhancedItems);
       setMetadata(result.metadata);
     } catch (error) {
-      handleError(error); // <--- Bắt lỗi tại đây
+      handleError(error);
     } finally {
       setLoading(false);
     }
