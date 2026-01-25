@@ -135,10 +135,10 @@ def seed_data():
 
         db.add_all(students)
         db.commit()
-        print("✅ Successfully seeded dirty data (type-safe).")
+        print(" Successfully seeded dirty data (type-safe).")
 
     except Exception as e:
-        print("❌ Error seeding data:", e)
+        print(" Error seeding data:", e)
         db.rollback()
     finally:
         db.close()

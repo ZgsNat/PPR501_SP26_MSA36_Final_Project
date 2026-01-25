@@ -74,7 +74,7 @@ class StudentDataCrawler:
         self.driver = webdriver.Chrome(options=options)
         self.driver.implicitly_wait(5)  # Reduced from 10 to 5 seconds
         
-        print("✓ WebDriver initialized successfully")
+        print(" WebDriver initialized successfully")
         
     def navigate_to_dashboard(self):
         """Navigate to the student dashboard"""
@@ -89,11 +89,11 @@ class StudentDataCrawler:
             
             time.sleep(1)  # Reduced wait time for performance
             
-            print(f"✓ Successfully loaded: {self.driver.title}")
+            print(f" Successfully loaded: {self.driver.title}")
             return True
             
         except TimeoutException:
-            print("✗ Timeout waiting for page to load")
+            print(" Timeout waiting for page to load")
             return False
     
     def set_rows_per_page(self, rows=100):
@@ -130,7 +130,7 @@ class StudentDataCrawler:
                     continue
             
             if not dropdown:
-                print("  ⚠ Rows per page dropdown not found, continuing with default...")
+                print("   Rows per page dropdown not found, continuing with default...")
                 return False
             
             # Click the dropdown to open options
@@ -158,17 +158,17 @@ class StudentDataCrawler:
                     continue
             
             if not option_clicked:
-                print("  ⚠ Could not select rows per page option")
+                print("   Could not select rows per page option")
                 return False
             
             # Wait for table to reload with new pagination
             time.sleep(1.5)  # Reduced wait time
             
-            print(f"✓ Successfully set to {rows} rows per page")
+            print(f" Successfully set to {rows} rows per page")
             return True
             
         except Exception as e:
-            print(f"  ⚠ Error setting rows per page: {e}")
+            print(f"   Error setting rows per page: {e}")
             return False
             
     def extract_table_structure(self):
@@ -197,7 +197,7 @@ class StudentDataCrawler:
                     continue
             
             if not headers:
-                print("  ⚠ No table headers found, attempting to extract from data rows...")
+                print("   No table headers found, attempting to extract from data rows...")
                 # Try to infer from data attributes or other sources
                 headers = self._infer_headers_from_data()
             
@@ -207,11 +207,11 @@ class StudentDataCrawler:
                 'extracted_at': datetime.now().isoformat()
             }
             
-            print(f"✓ Table structure extracted: {headers}")
+            print(f" Table structure extracted: {headers}")
             return headers
             
         except Exception as e:
-            print(f"✗ Error extracting table structure: {e}")
+            print(f" Error extracting table structure: {e}")
             return []
     
     def _infer_headers_from_data(self):
@@ -255,7 +255,7 @@ class StudentDataCrawler:
                     continue
             
             if not rows:
-                print("  ⚠ No data rows found in table")
+                print("   No data rows found in table")
                 return []
             
             students = []
@@ -286,15 +286,15 @@ class StudentDataCrawler:
                             print(f"  Processed {idx} rows...")
                             
                 except Exception as e:
-                    print(f"  ⚠ Error processing row {idx}: {e}")
+                    print(f"   Error processing row {idx}: {e}")
                     continue
             
             self.data['students'] = students
-            print(f"✓ Extracted {len(students)} student records")
+            print(f" Extracted {len(students)} student records")
             return students
             
         except Exception as e:
-            print(f"✗ Error extracting student data: {e}")
+            print(f" Error extracting student data: {e}")
             return []
     
     def crawl_all_pages(self):
@@ -330,16 +330,16 @@ class StudentDataCrawler:
                         students_on_page = self.extract_student_data()
                         all_students.extend(students_on_page)
                     else:
-                        print(f"  ⚠ Could not navigate to page {current_page}")
+                        print(f"   Could not navigate to page {current_page}")
                         break
             
             # Update data with all students
             self.data['students'] = all_students
-            print(f"\n✓ Total crawled: {len(all_students)} records from {current_page} page(s)")
+            print(f"\n Total crawled: {len(all_students)} records from {current_page} page(s)")
             return all_students
             
         except Exception as e:
-            print(f"✗ Error crawling all pages: {e}")
+            print(f" Error crawling all pages: {e}")
             return self.data['students']
     
     def get_total_records(self):
@@ -368,7 +368,7 @@ class StudentDataCrawler:
             return None
             
         except Exception as e:
-            print(f"  ⚠ Could not get total records: {e}")
+            print(f"   Could not get total records: {e}")
             return None
     
     def go_to_next_page(self):
@@ -396,7 +396,7 @@ class StudentDataCrawler:
             return False
             
         except Exception as e:
-            print(f"  ⚠ Error clicking next page: {e}")
+            print(f"   Error clicking next page: {e}")
             return False
     
     def extract_page_metadata(self):
@@ -430,11 +430,11 @@ class StudentDataCrawler:
                 metadata['has_search'] = False
             
             self.data['metadata'] = metadata
-            print(f"✓ Metadata extracted: {metadata}")
+            print(f" Metadata extracted: {metadata}")
             return metadata
             
         except Exception as e:
-            print(f"✗ Error extracting metadata: {e}")
+            print(f" Error extracting metadata: {e}")
             return {}
     
     def save_to_json(self, filename='crawled_data.json'):
@@ -445,18 +445,18 @@ class StudentDataCrawler:
             with open(filepath, 'w', encoding='utf-8') as f:
                 json.dump(self.data, f, indent=2, ensure_ascii=False)
             
-            print(f"\n✓ Data saved to JSON: {filepath}")
+            print(f"\n Data saved to JSON: {filepath}")
             return filepath
             
         except Exception as e:
-            print(f"✗ Error saving to JSON: {e}")
+            print(f" Error saving to JSON: {e}")
             return None
     
     def save_to_excel(self, filename='crawled_data.xlsx'):
         """Save student data to Excel file"""
         try:
             if not self.data['students']:
-                print("⚠ No student data to save to Excel")
+                print(" No student data to save to Excel")
                 return None
             
             filepath = os.path.join(self.output_path, filename)
@@ -475,18 +475,18 @@ class StudentDataCrawler:
                 structure_df = pd.DataFrame([self.data['table_structure']])
                 structure_df.to_excel(writer, sheet_name='Table Structure', index=False)
             
-            print(f"✓ Data saved to Excel: {filepath}")
+            print(f" Data saved to Excel: {filepath}")
             return filepath
             
         except Exception as e:
-            print(f"✗ Error saving to Excel: {e}")
+            print(f" Error saving to Excel: {e}")
             return None
     
     def save_to_csv(self, filename='crawled_data.csv'):
         """Save student data to CSV file"""
         try:
             if not self.data['students']:
-                print("⚠ No student data to save to CSV")
+                print(" No student data to save to CSV")
                 return None
             
             filepath = os.path.join(self.output_path, filename)
@@ -494,11 +494,11 @@ class StudentDataCrawler:
             df = pd.DataFrame(self.data['students'])
             df.to_csv(filepath, index=False, encoding='utf-8-sig')
             
-            print(f"✓ Data saved to CSV: {filepath}")
+            print(f" Data saved to CSV: {filepath}")
             return filepath
             
         except Exception as e:
-            print(f"✗ Error saving to CSV: {e}")
+            print(f" Error saving to CSV: {e}")
             return None
     
     def take_screenshot(self, filename='screenshot.png'):
@@ -507,11 +507,11 @@ class StudentDataCrawler:
             filepath = os.path.join(self.output_path, filename)
             
             self.driver.save_screenshot(filepath)
-            print(f"✓ Screenshot saved: {filepath}")
+            print(f" Screenshot saved: {filepath}")
             return filepath
             
         except Exception as e:
-            print(f"✗ Error taking screenshot: {e}")
+            print(f" Error taking screenshot: {e}")
             return None
     
     def crawl(self, save_formats=['json', 'excel', 'csv']):
@@ -531,7 +531,7 @@ class StudentDataCrawler:
             
             # Navigate
             if not self.navigate_to_dashboard():
-                print("\n✗ Failed to navigate to dashboard")
+                print("\n Failed to navigate to dashboard")
                 return False
             
             # Take initial screenshot
@@ -574,7 +574,7 @@ class StudentDataCrawler:
             return True
             
         except Exception as e:
-            print(f"\n✗ Crawling failed: {e}")
+            print(f"\n Crawling failed: {e}")
             import traceback
             traceback.print_exc()
             return False
@@ -583,7 +583,7 @@ class StudentDataCrawler:
             if self.driver:
                 print("\n→ Closing browser...")
                 self.driver.quit()
-                print("✓ Browser closed")
+                print(" Browser closed")
     
     def get_data(self):
         """Return the crawled data"""
@@ -602,9 +602,9 @@ def main():
     success = crawler.crawl(save_formats=['json', 'excel', 'csv'])
     
     if success:
-        print("\n✓ Crawling completed successfully!")
+        print("\n Crawling completed successfully!")
     else:
-        print("\n✗ Crawling failed!")
+        print("\n Crawling failed!")
     
     return crawler.get_data()
 
